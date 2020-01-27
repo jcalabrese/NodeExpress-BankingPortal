@@ -11,6 +11,7 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname,'public')));
 app.use(express.urlencoded({extended:true}));
 
+
 const accountData = fs.readFileSync(path.join(__dirname,'/json/accounts.json'),'utf8', (err, data) => {
      if ( err) throw err;
      return data;
@@ -66,13 +67,8 @@ app.get('/payment', (req,res) => {
 
 app.post('/payment', (req,res) => {
   let amount = parseInt(req.body.amount);
-  console.log(`amount ${amount}`);
-  console.log(`credit balance ${accounts.credit.balance}`);
   accounts.credit.balance -= amount;
-  console.log(`credit balance ${accounts.credit.balance}`);
-  console.log(`credit balance ${accounts.credit.available}`);
   accounts.credit.available += amount;
-  console.log(`credit balance ${accounts.credit.available}`);
   const accountsJSON = JSON.stringify(accounts);
 
   fs.writeFileSync(path.join(__dirname,'/json/accounts.json'),accountsJSON,'utf8');
